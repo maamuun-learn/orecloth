@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pesanan Berhasil | Orecloth</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+
+  <header class="header">
+    <nav class="navbar">
+      <a href="index.html" class="logo">Orecloth</a>
+    </nav>
+  </header>
+
+  <main class="success-page" style="padding: 40px 20px;">
+    <section class="success-section" style="max-width: 500px; margin: 0 auto;">
+      <div class="success-container" style="text-align: center; background: #fff; padding: 30px; border-radius: 16px; box-shadow: var(--shadow);">
+        
+        <div class="success-icon" style="font-size: 50px; color: #2ecc71; margin-bottom: 15px;">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+
+        <h2 style="margin-bottom: 10px; font-size: 22px;">Pesanan Berhasil!</h2>
+        <p style="color: #666; font-size: 14px; line-height: 1.5; margin-bottom: 25px;">
+          Terima kasih sudah berbelanja di Orecloth Store. Pesanan Anda telah kami terima dan akan segera diproses.
+        </p>
+
+        <div class="order-detail" style="background: #fdfaf7; border: 1px dashed var(--primary); padding: 15px; border-radius: 8px; text-align: left; margin-bottom: 25px;">
+          <p style="margin-bottom: 8px; font-size: 13px;"><strong>ID Pesanan:</strong> <span id="out-order-id" style="color: var(--primary);">#ORD-XXXXXX</span></p>
+          <p style="margin-bottom: 0; font-size: 13px;"><strong>Total Pembayaran:</strong> <span id="out-order-total" style="font-weight: bold;">Rp0</span></p>
+        </div>
+
+        <div class="success-actions" style="display: flex; flex-direction: column; gap: 10px;">
+          <a href="index.html" class="btn-primary" style="display: block; padding: 12px; border-radius: 8px; font-weight: bold;">
+            <i class="fa-solid fa-house"></i> Kembali ke Beranda
+          </a>
+          <a href="kategori.html" class="btn-secondary" style="display: block; padding: 12px; border-radius: 8px; color: var(--text);">
+            Belanja Pakaian Lainnya
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" style="margin-top: 40px;">
+    <p>&copy; 2026 Orecloth Store.</p>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const orderId = sessionStorage.getItem("last_order_id") || "ORD-" + Math.floor(100000 + Math.random() * 900000);
+      const orderTotal = parseInt(sessionStorage.getItem("last_order_total"));
+
+      document.getElementById("out-order-id").textContent = "#" + orderId;
+      
+      if(!isNaN(orderTotal)) {
+        document.getElementById("out-order-total").textContent = "Rp " + orderTotal.toLocaleString('id-ID');
+      } else {
+        document.getElementById("out-order-total").textContent = "Rp 150.000"; // Fallback default
+      }
+
+      // Bersihkan memori session setelah ditampilkan agar secure
+      sessionStorage.removeItem("last_order_id");
+      sessionStorage.removeItem("last_order_total");
+    });
+  </script>
+</body>
+</html>

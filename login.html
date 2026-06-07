@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | Orecloth</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+
+  <header class="header">
+    <nav class="navbar">
+      <a href="index.html" class="logo">Orecloth</a>
+    </nav>
+  </header>
+
+  <section class="auth-section" style="padding: 40px 20px;">
+    <div class="auth-container" style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 16px; box-shadow: var(--shadow);">
+      <h2>Masuk ke Akun</h2>
+      <p style="color: #777; font-size: 13px; margin-bottom: 20px;">Silakan login untuk melanjutkan simulasi transaksi</p>
+
+      <div id="login-alert" style="display: none; background: #fce4e4; border: 1px solid #fcc2c2; color: #cc0000; padding: 10px; border-radius: 8px; font-size: 13px; margin-bottom: 15px;">
+        <i class="fa-solid fa-circle-exclamation"></i> <span id="alert-text">Email atau password salah!</span>
+      </div>
+
+      <form id="static-login-form" onsubmit="handleStaticLogin(event)">
+        <label for="email" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: bold;">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          placeholder="Masukkan email (Contoh: adel@gmail.com)" 
+          style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 15px;" 
+          required 
+        />
+
+        <label for="password" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: bold;">Password</label>
+        <div class="password-wrapper" style="position: relative; margin-bottom: 20px;">
+          <input 
+            type="password" 
+            id="password" 
+            placeholder="Masukkan password (Contoh: password123)" 
+            style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; padding-right: 40px;" 
+            required 
+          />
+          <button type="button" class="toggle-password" onclick="togglePassword('password', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #aaa; cursor: pointer;">
+            <i class="fa-solid fa-eye"></i>
+          </button>
+        </div>
+
+        <button type="submit" style="width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer;">
+          <i class="fa-solid fa-right-to-bracket"></i> Login
+        </button>
+      </form>
+
+      <p class="auth-link" style="text-align: center; margin-top: 20px; font-size: 13px; color: #555;">
+        Belum punya akun? <a href="register.html" style="color: var(--primary); font-weight: bold;">Daftar disini</a>
+      </p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>&copy; 2026 Orecloth Store.</p>
+  </footer>
+
+  <nav class="mobile-bottom-nav">
+    <a href="index.html">
+      <i class="fa-solid fa-house"></i>
+      <span>Beranda</span>
+    </a>
+    <a href="kategori.html">
+      <i class="fa-solid fa-border-all"></i>
+      <span>Kategori</span>
+    </a>
+    <a href="keranjang.html">
+      <i class="fa-solid fa-basket-shopping"></i>
+      <span id="cart-count">0</span>
+      <span>Keranjang</span>
+    </a>
+    <a href="login.html" class="active">
+      <i class="fa-solid fa-user"></i>
+      <span>Akun</span>
+    </a>
+  </nav>
+
+  <script src="js/script.js"></script>
+
+  <script>
+    function handleStaticLogin(e) {
+      e.preventDefault();
+      const emailInput = document.getElementById("email").value.trim();
+      const passwordInput = document.getElementById("password").value;
+      const alertBox = document.getElementById("login-alert");
+      const alertText = document.getElementById("alert-text");
+
+      // Ambil database user buatan dari localStorage
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+
+      // Cari kesocokan user berdasarkan email dan password
+      const userFound = users.find(u => u.email === emailInput && u.password === passwordInput);
+
+      if (userFound) {
+        alertBox.style.display = "none";
+        
+        // Simpan state session login palsu ke browser
+        localStorage.setItem("currentUser", JSON.stringify({
+          username: userFound.username,
+          email: userFound.email,
+          role: userFound.role
+        }));
+
+        showToast(`👋 Selamat datang kembali, ${userFound.username}!`);
+
+        // Jika login sebagai admin, lempar langsung ke halaman admin.html
+        setTimeout(() => {
+          if (userFound.role === "admin") {
+            window.location.href = "admin.html";
+          } else {
+            window.location.href = "index.html";
+          }
+        }, 1200);
+
+      } else {
+        // Tampilkan pesan error jika salah password/email
+        alertText.textContent = "Email atau password yang Anda masukkan salah!";
+        alertBox.style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>

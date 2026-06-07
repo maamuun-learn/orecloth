@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detail Produk | Orecloth</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- FontAwesome untuk Icon Bottom Nav & Tombol -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <nav class="navbar">
+      <a href="index.html" class="logo">Orecloth</a>
+
+      <!-- Menu Utama Desktop (Otomatis Sembunyi di Mobile) -->
+      <ul class="nav-menu">
+        <li><a href="index.html">Beranda</a></li>
+        <li><a href="kategori.html">Kategori</a></li>
+      </ul>
+
+      <!-- Aksi Navbar Dinamis -->
+      <div class="nav-actions">
+        <input type="text" id="search-input" placeholder="Cari baju..." onkeyup="searchProduct(this.value)" />
+        <a href="login.html" class="login-link"><i class="fa-solid fa-user"></i> Masuk</a>
+        <a href="keranjang.html" class="cart-link">
+          <i class="fa-solid fa-basket-shopping"></i><span id="cart-count">0</span>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- DETAIL PRODUK UTAMA -->
+  <main class="detail-page-container">
+    <section class="product-detail-section">
+      
+      <!-- Area Foto Produk -->
+      <div class="detail-image-wrapper">
+        <img id="detail-image" src="img/baju_casual.jpg" alt="Foto Produk" />
+      </div>
+
+      <!-- Area Informasi & Pilihan Spek -->
+      <div class="detail-info-wrapper">
+        <span class="badge" id="detail-badge">Diskon 20%</span>
+        <h2 id="detail-name">Nama Produk</h2>
+
+        <p class="old-price" id="detail-old-price">Rp0</p>
+        <p class="price" id="detail-price">Rp0</p>
+
+        <p class="product-desc" id="detail-desc">
+          Deskripsi produk akan dimuat secara otomatis di sini.
+        </p>
+
+        <!-- Pilihan Varian Ukuran -->
+        <div class="option-group">
+          <label for="detail-size">Pilih Ukuran</label>
+          <select id="detail-size">
+            <option>Pilih ukuran</option>
+          </select>
+        </div>
+
+        <!-- Pilihan Varian Warna -->
+        <div class="option-group">
+          <label for="detail-color">Pilih Warna</label>
+          <select id="detail-color">
+            <option>Pilih warna</option>
+          </select>
+        </div>
+
+        <!-- Jumlah Pembelian -->
+        <div class="option-group">
+          <label for="detail-qty">Jumlah</label>
+          <input type="number" id="detail-qty" value="1" min="1" />
+        </div>
+
+        <!-- TOMBOL AKSI MELAYANG (STICKY BOTTOM FOR MOBILE) -->
+        <div class="mobile-sticky-action">
+          <button class="btn-primary" id="add-to-cart-btn">
+            <i class="fa-solid fa-cart-plus"></i> Tambah ke Keranjang
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- AREA REVIEW / ULASAN -->
+    <section class="review-section">
+      <div class="section-title">
+        <h2>Ulasan Pembeli</h2>
+        <p>Pendapat mereka tentang produk ini.</p>
+      </div>
+
+      <div class="review-list" id="review-list">
+        <!-- Review diisi otomatis melalui fungsi script.js -->
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER DESKTOP -->
+  <footer class="footer">
+    <p>&copy; 2026 Orecloth Store.</p>
+  </footer>
+
+  <!-- KOMPONEN MOBILE: BOTTOM NAVIGATION BAR -->
+  <nav class="mobile-bottom-nav">
+    <a href="index.html">
+      <i class="fa-solid fa-house"></i>
+      <span>Beranda</span>
+    </a>
+    <a href="kategori.html">
+      <i class="fa-solid fa-border-all"></i>
+      <span>Kategori</span>
+    </a>
+    <a href="keranjang.html" class="active">
+      <i class="fa-solid fa-basket-shopping"></i>
+      <span id="cart-count">0</span>
+      <span>Keranjang</span>
+    </a>
+    <a href="login.html">
+      <i class="fa-solid fa-user"></i>
+      <span>Akun</span>
+    </a>
+  </nav>
+
+  <!-- CORE JAVASCRIPT GLOBAL -->
+  <script src="js/script.js"></script>
+
+  <!-- Logika Overriding Khusus Halaman Detail untuk Tombol Tambah Keranjang di GitHub.io -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Tunggu renderProductDetail bawaan script.js selesai berjalan
+      setTimeout(() => {
+        const params = new URLSearchParams(window.location.search);
+        const productId = parseInt(params.get('id')) || 1;
+        const btn = document.getElementById("add-to-cart-btn");
+        
+        if (btn) {
+          // Ambil value dinamis dari select box saat di-tap user di mobile
+          btn.onclick = () => {
+            const size = document.getElementById("detail-size").value;
+            const color = document.getElementById("detail-color").value;
+            const qty = parseInt(document.getElementById("detail-qty").value) || 1;
+            
+            if (size === "Pilih ukuran" || color === "Pilih warna") {
+              alert("Silakan pilih Ukuran dan Warna terlebih dahulu!");
+              return;
+            }
+            
+            addToCart(productId, size, color, qty);
+          };
+        }
+      }, 100);
+    });
+  </script>
+</body>
+</html>

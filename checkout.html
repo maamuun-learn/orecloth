@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout | Orecloth</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+
+  <header class="header">
+    <nav class="navbar">
+      <a href="index.html" class="logo">Orecloth</a>
+    </nav>
+  </header>
+
+  <main class="checkout-page" style="padding: 20px 5%;">
+    <section class="checkout-section">
+      <div class="section-title">
+        <h2>Penyelesaian Pesanan</h2>
+        <p>Lengkapi data pengiriman dan pembayaran di bawah ini.</p>
+      </div>
+
+      <div class="checkout-container">
+        
+        <form class="checkout-form" id="order-form">
+          <h3><i class="fa-solid fa-location-dot"></i> Alamat Pengiriman</h3>
+          
+          <label for="nama">Nama Penerima</label>
+          <input type="text" id="nama" placeholder="Masukkan nama lengkap" required />
+
+          <label for="telepon">Nomor Telepon / WhatsApp</label>
+          <input type="tel" id="telepon" placeholder="Contoh: 08123456789" required />
+
+          <label for="alamat">Alamat Lengkap</label>
+          <textarea id="alamat" rows="3" placeholder="Nama jalan, nomor rumah, RT/RW, kecamatan, kota, dan kode pos" required></textarea>
+
+          <h3 style="margin-top: 25px;"><i class="fa-solid fa-credit-card"></i> Metode Pembayaran</h3>
+          <label for="payment-method">Pilih Pembayaran</label>
+          <select id="payment-method" required>
+            <option value="Transfer Bank">Transfer Bank (Manual Verification)</option>
+            <option value="E-Wallet">E-Wallet (OVO / GoPay / Dana)</option>
+            <option value="COD">Bayar di Tempat (COD)</option>
+          </select>
+
+          <h3 style="margin-top: 25px;"><i class="fa-solid fa-ticket"></i> Kupon / Voucher</h3>
+          <label for="voucher">Kode Voucher</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="voucher" placeholder="Contoh: ORENEW20" style="margin-bottom: 0; flex: 1;" />
+            <button type="button" class="btn-secondary" onclick="applyVoucherMobile()" style="padding: 0 16px; border-radius: 8px; white-space: nowrap;">Gunakan</button>
+          </div>
+          <small id="voucher-status" style="display: block; margin-top: 4px; font-size: 11px;"></small>
+
+          <button type="button" class="btn-primary" id="btn-pay-now" onclick="submitOrderMobile()" style="width: 100%; margin-top: 30px; padding: 14px; font-size: 16px; border-radius: 8px;">
+            <i class="fa-solid fa-lock"></i> Bayar Sekarang
+          </button>
+        </form>
+
+        <aside class="order-summary" style="margin-top: 20px;">
+          <h3>Ringkasan Pesanan</h3>
+          
+          <div id="checkout-list"></div>
+
+          <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;" />
+
+          <div class="summary-row">
+            <span>Subtotal Produk</span>
+            <span id="checkout-subtotal">Rp0</span>
+          </div>
+
+          <div class="summary-row">
+            <span>Potongan Voucher</span>
+            <span id="voucher-discount" style="color: #2ecc71;">- Rp0</span>
+          </div>
+
+          <div class="summary-row total">
+            <span>Total Bayar</span>
+            <span id="final-total" style="color: var(--primary); font-weight: bold;">Rp0</span>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Orecloth Store.</p>
+  </footer>
+
+  <script>
+    let discount = 0;
+    let subtotal = 0;
+
+    function renderCheckoutSummary() {
+      const checkoutList = document.getElementById("checkout-list");
+      const subtotalEl = document.getElementById("checkout-subtotal");
+      const finalTotalEl = document.getElementById("final-total");
+      
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      if(!checkoutList) return;
+
+      checkoutList.innerHTML = "";
+      subtotal = 0;
+
+      if(cart.length === 0) {
+        checkoutList.innerHTML = "<p style='color:#777; font-size:13px;'>Tidak ada produk untuk dicheckout.</p>";
+        return;
+      }
+
+      cart.forEach(item => {
+        subtotal += item.price * item.quantity;
+        checkoutList.innerHTML += `
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px;">
+            <span>${item.name} (${item.size}/${item.color}) <strong>x${item.quantity}</strong></span>
+            <span>Rp${(item.price * item.quantity).toLocaleString('id-ID')}</span>
+          </div>
+        `;
+      });
+
+      subtotalEl.textContent = "Rp " + subtotal.toLocaleString('id-ID');
+      calculateFinalTotal();
+    }
+
+    function applyVoucherMobile() {
+      const code = document.getElementById("voucher").value.trim().toUpperCase();
+      const statusEl = document.getElementById("voucher-status");
+      const discountEl = document.getElementById("voucher-discount");
+
+      if(code === "ORENEW20") {
+        discount = subtotal * 0.2; // Diskon 20%
+        statusEl.style.color = "#2ecc71";
+        statusEl.textContent = "✓ Voucher ORENEW20 berhasil digunakan! (Potongan 20%)";
+      } else if(code !== "") {
+        discount = 0;
+        statusEl.style.color = "#e74c3c";
+        statusEl.textContent = "✗ Kode kupon tidak valid atau sudah kedaluwarsa.";
+      } else {
+        discount = 0;
+        statusEl.textContent = "";
+      }
+
+      discountEl.textContent = "- Rp " + discount.toLocaleString('id-ID');
+      calculateFinalTotal();
+    }
+
+    function calculateFinalTotal() {
+      const finalTotalEl = document.getElementById("final-total");
+      let netTotal = subtotal - discount;
+      if (netTotal < 0) netTotal = 0;
+      finalTotalEl.textContent = "Rp " + netTotal.toLocaleString('id-ID');
+    }
+
+    function submitOrderMobile() {
+      const nama = document.getElementById("nama").value.trim();
+      const telepon = document.getElementById("telepon").value.trim();
+      const alamat = document.getElementById("alamat").value.trim();
+
+      if(!nama || !telepon || !alamat) {
+        alert("Harap lengkapi semua data pengiriman!");
+        return;
+      }
+
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      if(cart.length === 0) {
+        alert("Keranjang belanja kosong!");
+        return;
+      }
+
+      // Hitung total final untuk di-passing ke success page via sessionStorage
+      let finalPay = subtotal - discount;
+      let orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
+
+      sessionStorage.setItem("last_order_id", orderId);
+      sessionStorage.setItem("last_order_total", finalPay);
+
+      // Bersihkan keranjang belanja setelah sukses transaksi
+      localStorage.removeItem("cart");
+
+      // Redirect ke halaman sukses
+      window.location.href = "success.html";
+    }
+
+    document.addEventListener("DOMContentLoaded", renderCheckoutSummary);
+  </script>
+</body>
+</html>

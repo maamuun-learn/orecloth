@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orecloth | Home</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+
+  <header class="header">
+    <nav class="navbar">
+      <a href="index.html" class="logo">Orecloth</a>
+
+      <ul class="nav-menu">
+        <li><a href="index.html" class="active">Beranda</a></li>
+        <li><a href="kategori.html">Kategori</a></li>
+        <li><a href="#rekomendasi">Rekomendasi</a></li>
+        <li><a href="#promo">Promo</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <input type="text" id="search-input" placeholder="Cari baju..." onkeyup="searchProduct(this.value)" />
+        <a href="login.html" class="login-link"><i class="fa-solid fa-user"></i> Masuk</a>
+        <a href="keranjang.html" class="cart-link">
+          <i class="fa-solid fa-basket-shopping"></i><span id="cart-count">0</span>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <section class="hero-section" id="promo">
+    <div class="hero-content">
+      <span class="hero-tag">New Collection 2026</span>
+      <h1>Tampil Stand Out Harian Kamu</h1>
+      <p>Dapatkan koleksi outfit casual up-to-date kualitas premium dengan promo terbatas.</p>
+      <a href="kategori.html" class="btn-primary">Lihat Produk <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+  </section>
+
+  <section class="product-section" id="rekomendasi">
+    <div class="section-title">
+      <h2>Rekomendasi Outfit</h2>
+      <p>Koleksi pakaian kasual terbaik pilihan kami khusus untuk Anda.</p>
+    </div>
+
+    <div class="products-grid">
+      <div class="product-card">
+        <img src="img/baju_casual.jpg" alt="Baju Casual Oversize" />
+        <span class="badge">Diskon 20%</span>
+        <h3>Baju Casual Oversize</h3>
+        <p class="price">Rp120.000</p>
+        <a href="detail-produk.html?id=1" class="btn-card">
+          <i class="fa-solid fa-eye"></i> Lihat Detail
+        </a>
+      </div>
+
+      <div class="product-card">
+        <img src="img/kemeja_korean.jpg" alt="Kemeja Korean Style" />
+        <span class="badge">Diskon 15%</span>
+        <h3>Kemeja Korean Style</h3>
+        <p class="price">Rp150.000</p>
+        <a href="detail-produk.html?id=2" class="btn-card">
+          <i class="fa-solid fa-eye"></i> Lihat Detail
+        </a>
+      </div>
+
+      <div class="product-card">
+        <img src="img/hoodie_casual.jpg" alt="Hoodie Casual Campus" />
+        <span class="badge">Best Seller</span>
+        <h3>Hoodie Casual Campus</h3>
+        <p class="price">Rp180.000</p>
+        <a href="detail-produk.html?id=3" class="btn-card">
+          <i class="fa-solid fa-eye"></i> Lihat Detail
+        </a>
+      </div>
+
+      <div class="product-card">
+        <img src="img/blouse_trendy.webp" alt="Blouse Trendy" />
+        <span class="badge">Voucher</span>
+        <h3>Blouse Trendy</h3>
+        <p class="price">Rp135.000</p>
+        <a href="detail-produk.html?id=4" class="btn-card">
+          <i class="fa-solid fa-eye"></i> Lihat Detail
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <h2>Siap tampil lebih stylish?</h2>
+    <p>Temukan baju casual favorit kamu sekarang juga.</p>
+    <a href="kategori.html" class="btn-primary">Mulai Belanja</a>
+  </section>
+
+  <footer class="footer">
+    <p>&copy; 2026 Orecloth Store. All Rights Reserved.</p>
+  </footer>
+
+  <nav class="mobile-bottom-nav">
+    <a href="index.html" class="active">
+      <i class="fa-solid fa-house"></i>
+      <span>Beranda</span>
+    </a>
+    <a href="kategori.html">
+      <i class="fa-solid fa-border-all"></i>
+      <span>Kategori</span>
+    </a>
+    <a href="keranjang.html">
+      <i class="fa-solid fa-basket-shopping"></i>
+      <span id="cart-count">0</span>
+      <span>Keranjang</span>
+    </a>
+    <a href="login.html">
+      <i class="fa-solid fa-user"></i>
+      <span>Akun</span>
+    </a>
+  </nav>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

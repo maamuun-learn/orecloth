@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daftar Akun | Orecloth</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+
+  <header class="header">
+    <nav class="navbar">
+      <a href="index.html" class="logo">Orecloth</a>
+    </nav>
+  </header>
+
+  <section class="auth-section" style="padding: 40px 20px;">
+    <div class="auth-container" style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 16px; box-shadow: var(--shadow);">
+      <h2>Buat Akun Baru</h2>
+      <p style="color: #777; font-size: 13px; margin-bottom: 20px;">Daftar untuk mulai mensimulasikan belanja baju favorit kamu</p>
+
+      <div id="register-alert" style="display: none; padding: 10px; border-radius: 8px; font-size: 13px; margin-bottom: 15px;">
+        <i class="fa-solid fa-circle-exclamation"></i> <span id="register-alert-text">Terjadi kesalahan.</span>
+      </div>
+
+      <form id="static-register-form" onsubmit="handleStaticRegister(event)">
+        <label for="reg-username" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: bold;">Nama Lengkap</label>
+        <input type="text" id="reg-username" placeholder="Masukkan nama lengkap" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 15px;" required />
+
+        <label for="reg-email" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: bold;">Email</label>
+        <input type="email" id="reg-email" placeholder="Masukkan alamat email aktif" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 15px;" required />
+
+        <label for="reg-password" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: bold;">Password</label>
+        <div class="password-wrapper" style="position: relative; margin-bottom: 15px;">
+          <input type="password" id="reg-password" placeholder="Buat password (min. 6 karakter)" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; padding-right: 40px;" required />
+          <button type="button" class="toggle-password" onclick="togglePassword('reg-password', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #aaa;">
+            <i class="fa-solid fa-eye"></i>
+          </button>
+        </div>
+
+        <label for="reg-confirm-password" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: bold;">Konfirmasi Password</label>
+        <div class="password-wrapper" style="position: relative; margin-bottom: 25px;">
+          <input type="password" id="reg-confirm-password" placeholder="Ulangi kembali password Anda" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; padding-right: 40px;" required />
+          <button type="button" class="toggle-password" onclick="togglePassword('reg-confirm-password', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #aaa;">
+            <i class="fa-solid fa-eye"></i>
+          </button>
+        </div>
+
+        <button type="submit" style="width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer;">
+          <i class="fa-solid fa-user-plus"></i> Daftar Sekarang
+        </button>
+      </form>
+
+      <p class="auth-link" style="text-align: center; margin-top: 20px; font-size: 13px; color: #555;">
+        Sudah punya akun? <a href="login.html" style="color: var(--primary); font-weight: bold;">Login disini</a>
+      </p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>&copy; 2026 Orecloth Store.</p>
+  </footer>
+
+  <nav class="mobile-bottom-nav">
+    <a href="index.html">
+      <i class="fa-solid fa-house"></i>
+      <span>Beranda</span>
+    </a>
+    <a href="kategori.html">
+      <i class="fa-solid fa-border-all"></i>
+      <span>Kategori</span>
+    </a>
+    <a href="keranjang.html">
+      <i class="fa-solid fa-basket-shopping"></i>
+      <span id="cart-count">0</span>
+      <span>Keranjang</span>
+    </a>
+    <a href="login.html" class="active">
+      <i class="fa-solid fa-user"></i>
+      <span>Akun</span>
+    </a>
+  </nav>
+
+  <script src="js/script.js"></script>
+
+  <script>
+    function handleStaticRegister(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById("reg-username").value.trim();
+      const email = document.getElementById("reg-email").value.trim();
+      const password = document.getElementById("reg-password").value;
+      const confirmPassword = document.getElementById("reg-confirm-password").value;
+
+      const alertBox = document.getElementById("register-alert");
+      const alertText = document.getElementById("register-alert-text");
+
+      // Reset alert style
+      alertBox.style.display = "none";
+      alertBox.style.background = "#fce4e4";
+      alertBox.style.border = "1px solid #fcc2c2";
+      alertBox.style.color = "#cc0000";
+
+      // 1. Validasi Panjang Password
+      if (password.length < 6) {
+        alertText.textContent = "Password minimal harus berisi 6 karakter!";
+        alertBox.style.display = "block";
+        return;
+      }
+
+      // 2. Validasi Kesamaan Password
+      if (password !== confirmPassword) {
+        alertText.textContent = "Konfirmasi password tidak cocok dengan password utama!";
+        alertBox.style.display = "block";
+        return;
+      }
+
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+
+      // 3. Validasi Apakah Email Sudah Terdaftar
+      const isEmailExist = users.some(u => u.email.toLowerCase() === email.toLowerCase());
+      if (isEmailExist) {
+        alertText.textContent = "Email sudah terdaftar! Gunakan email lain.";
+        alertBox.style.display = "block";
+        return;
+      }
+
+      // 4. Masukkan User Baru ke Database Browser (LocalStorage)
+      users.push({
+        username: username,
+        email: email,
+        password: password,
+        role: "user" // Default role untuk registrasi umum
+      });
+
+      localStorage.setItem("users", JSON.stringify(users));
+
+      // Berikan feedback sukses hijau
+      alertBox.style.background = "#ebf7ee";
+      alertBox.style.border = "1px solid #c3ebd0";
+      alertBox.style.color = "#1e7e34";
+      alertText.textContent = "Registrasi Berhasil! Mengalihkan ke halaman login...";
+      alertBox.style.display = "block";
+
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 1500);
+    }
+  </script>
+</body>
+</html>

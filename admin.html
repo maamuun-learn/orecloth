@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Admin | Orecloth</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+
+  <header class="header">
+    <nav class="navbar">
+      <a href="index.html" class="logo">Orecloth <span style="font-size: 11px; background: #333; color: #fff; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">ADMIN</span></a>
+      
+      <ul class="nav-menu">
+        <li><a href="index.html">Beranda</a></li>
+        <li><a href="admin.html" class="active">Admin</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <span class="user-greeting" id="admin-user"><i class="fa-solid fa-user-shield"></i> Admin</span>
+        <a href="#" onclick="logoutProcess()"><i class="fa-solid fa-right-from-bracket"></i></a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="admin-page" style="padding: 20px 5%;">
+    <section class="admin-section">
+      <div class="section-title">
+        <h2>Dashboard Manajemen Produk</h2>
+        <p>Simulasi penambahan katalog produk baru secara real-time ke halaman utama.</p>
+      </div>
+
+      <div class="admin-container">
+        
+        <form class="admin-form" id="product-form" onsubmit="addStaticProduct(event)">
+          <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-box-open"></i> Form Tambah Baju</h3>
+
+          <label for="product-name">Nama Produk</label>
+          <input type="text" id="product-name" placeholder="Contoh: Jaket Denim Vintage" oninput="updateAdminPreview()" required />
+
+          <label for="product-price">Harga (Rupiah)</label>
+          <input type="number" id="product-price" placeholder="Contoh: 145000" oninput="updateAdminPreview()" required />
+
+          <label for="product-discount">Tag / Badge Promo</label>
+          <input type="text" id="product-discount" placeholder="Contoh: Diskon 10% atau Best Seller" oninput="updateAdminPreview()" />
+
+          <label for="product-image">URL / Jalur Foto Produk</label>
+          <select id="product-image" onchange="updateAdminPreview()">
+            <option value="img/baju_casual.jpg">Mockup Baju Casual (Lokal)</option>
+            <option value="img/kemeja_korean.jpg">Mockup Kemeja Korea (Lokal)</option>
+            <option value="img/hoodie_casual.jpg">Mockup Hoodie Campus (Lokal)</option>
+            <option value="img/blouse_trendy.webp">Mockup Blouse Trendy (Lokal)</option>
+          </select>
+
+          <label for="product-description">Deskripsi Lengkap Produk</label>
+          <textarea id="product-description" rows="4" placeholder="Tuliskan detail bahan, ukuran ketersediaan, dan keunggulan outfit..." oninput="updateAdminPreview()" required></textarea>
+
+          <button type="submit" style="width: 100%; margin-top: 15px; padding: 12px; border-radius: 8px;">
+            <i class="fa-solid fa-plus"></i> Terbitkan ke Toko
+          </button>
+        </form>
+
+        <aside class="admin-preview">
+          <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-magnifying-glass-chart"></i> Live Preview</h3>
+          
+          <div class="product-card" style="border: 1px solid #eee; margin: 0 auto; max-width: 280px;">
+            <img id="preview-image" src="img/baju_casual.jpg" alt="Preview" />
+            <span class="badge" id="preview-discount">Diskon 0%</span>
+            <h3 id="preview-name" style="font-size: 14px;">Nama Produk</h3>
+            <p class="price" id="preview-price" style="color: var(--primary); font-weight: bold;">Rp0</p>
+            <p id="preview-description" style="font-size: 11px; color: #777; line-height: 1.3; margin-top: 5px; text-align: left;">
+              Deskripsi produk akan muncul secara live di sini saat Anda mengetik.
+            </p>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Orecloth Admin Area.</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+
+  <script>
+    // Memastikan proteksi halaman admin palsu di GitHub Pages
+    document.addEventListener("DOMContentLoaded", () => {
+      const user = JSON.parse(localStorage.getItem("currentUser"));
+      if (!user || user.role !== "admin") {
+        alert("🔒 Akses Ditolak! Anda harus login sebagai akun Admin untuk mengakses halaman ini.");
+        window.location.href = "login.html";
+      } else {
+        const adminGreeting = document.getElementById("admin-user");
+        if(adminGreeting) adminGreeting.innerHTML = `<i class="fa-solid fa-user-shield"></i> ${user.username}`;
+      }
+      updateAdminPreview();
+    });
+
+    // Fungsi live sinkronisasi teks input ke kartu preview
+    function updateAdminPreview() {
+      const name = document.getElementById("product-name").value || "Nama Produk Baru";
+      const price = parseInt(document.getElementById("product-price").value) || 0;
+      const badge = document.getElementById("product-discount").value || "Koleksi Baru";
+      const img = document.getElementById("product-image").value;
+      const desc = document.getElementById("product-description").value || "Deskripsi baju baru akan tampil disini.";
+
+      document.getElementById("preview-name").textContent = name;
+      document.getElementById("preview-price").textContent = "Rp " + price.toLocaleString('id-ID');
+      document.getElementById("preview-discount").textContent = badge;
+      document.getElementById("preview-image").src = img;
+      document.getElementById("preview-description").textContent = desc;
+    }
+
+    // Fungsi eksekusi simpan ke database lokal browser
+    function addStaticProduct(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("product-name").value.trim();
+      const price = parseInt(document.getElementById("product-price").value);
+      const badge = document.getElementById("product-discount").value.trim() || "Item Baru";
+      const img = document.getElementById("product-image").value;
+      const desc = document.getElementById("product-description").value.trim();
+
+      // Tarik database array produk saat ini
+      let currentProducts = JSON.parse(localStorage.getItem('products')) || [];
+
+      // Kalkulasi ID otomatis baru
+      const newId = currentProducts.length > 0 ? Math.max(...currentProducts.map(p => p.id)) + 1 : 1;
+
+      // Bentuk objek item produk baru
+      const newProduct = {
+        id: newId,
+        name: name,
+        price: price,
+        oldPrice: price,
+        image: img,
+        badge: badge,
+        description: desc,
+        sizes: ["S", "M", "L", "XL"], // Default spek isi otomatis
+        colors: ["Hitam", "Putih"], // Default spek isi otomatis
+        reviews: []
+      };
+
+      // Push & simpan kembali ke memori browser
+      currentProducts.push(newProduct);
+      localStorage.setItem('products', JSON.stringify(currentProducts));
+
+      // Berikan toast konfirmasi sukses
+      showToast(`🚀 "${name}" Berhasil diterbitkan ke katalog depan!`);
+
+      // Reset Form input
+      document.getElementById("product-form").reset();
+      
+      // Redirect ke beranda untuk melihat hasilnya langsung setelah 1.5 detik
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1500);
+    }
+  </script>
+</body>
+</html>
